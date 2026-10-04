@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "db:local": "pglite-server --db=.pgdata --port=5433 --max-connections=10",
-    "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.mjs",
-    "codes": "node --env-file-if-exists=.env.local scripts/make-codes.mjs"
+    "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.mjs"
   },
   "dependencies": {
     "next": "^16.3.8",
@@ -16,7 +15,8 @@
     "postgres": "^3.4.9",
     "qrcode": "^1.5.4",
     "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
