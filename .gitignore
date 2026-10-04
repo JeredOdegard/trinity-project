@@ -1,0 +1,8 @@
+node_modules
+.next
+.env*.local
+.pgdata
+qr
+next-env.d.ts
+.vercel
+.DS_Store
