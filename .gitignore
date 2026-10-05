@@ -6,3 +6,5 @@ qr
 next-env.d.ts
 .vercel
 .DS_Store
+.env*
+!.env.example
