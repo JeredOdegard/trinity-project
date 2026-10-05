@@ -24,7 +24,7 @@ export default async function TreePage({ params, searchParams }) {
     <>
       <Brand />
       <p className="label">The tree · {leafIds.length.toLocaleString("en-US")} {leafIds.length === 1 ? "leaf" : "leaves"}</p>
-      <TreeScene leafIds={leafIds} mineId={bag.message_id} code={code} interactive
+      <TreeScene leafIds={leafIds} mineId={bag.message_id} mineBody={bag.body} code={code} interactive
                  featured={featured.map(({ id, body }) => ({ id, body }))} />
       <GoalBar count={leafIds.length} />
       <Link href={`/t/${code}`} className="btn ghost">Back to my match</Link>

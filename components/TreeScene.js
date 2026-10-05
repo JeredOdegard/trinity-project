@@ -2,10 +2,11 @@
 import { useEffect, useRef, useState } from "react";
 import { goalStatus } from "@/lib/goals";
 
-// Interactive: drag to turn, tap a leaf to read it, and a random message lights up every few seconds.
-// Compact (not interactive): slowly turning preview.
-export default function TreeScene({ leafIds, mineId, interactive = false, featured = [], code, className = "scene" }) {
+// Interactive: drag to turn, pinch to zoom, tap a leaf to read it; a random message lights up every few seconds.
+// Compact (not interactive): a preview that faces the visitor's leaf, with a "Your leaf" marker on it.
+export default function TreeScene({ leafIds, mineId, mineBody, interactive = false, featured = [], code, className = "scene" }) {
   const el = useRef(null);
+  const marker = useRef(null);
   const scene = useRef(null);
   const [open, setOpen] = useState(null);
   const level = goalStatus(leafIds.length).level;
@@ -16,6 +17,7 @@ export default function TreeScene({ leafIds, mineId, interactive = false, featur
       if (!alive) return;
       scene.current = createScene(el.current, {
         interactive,
+        marker: marker.current,
         onPick: async (id, isMine) => {
           if (isMine) return setOpen({ mine: true });
           const known = featured.find((f) => f.id === id);
@@ -60,15 +62,27 @@ export default function TreeScene({ leafIds, mineId, interactive = false, featur
 
   return (
     <>
-      <div className={className} ref={el} />
+      <div className={className}>
+        <div className="scene-canvas" ref={el} />
+        <div className="leaf-marker" ref={marker} aria-hidden="true">
+          <span className="ring" />
+          <span className="tag">Your leaf</span>
+        </div>
+        {interactive && (
+          <div className="scene-tools">
+            <button type="button" onClick={() => scene.current?.focusMine()}>My leaf</button>
+            <button type="button" onClick={() => scene.current?.resetView()}>Reset</button>
+          </div>
+        )}
+      </div>
       {interactive && (
         <div className="reader" aria-live="polite">
           {open?.mine ? (
-            <p className="hint">That's your leaf.</p>
+            <blockquote className="card mine-card">{mineBody}<cite>Your leaf</cite></blockquote>
           ) : open ? (
             <blockquote className="card">{open.body}</blockquote>
           ) : (
-            <p className="hint">Tap any leaf to read it. Drag to turn the tree.</p>
+            <p className="hint">Tap a leaf to read it. Drag to turn, pinch to zoom.</p>
           )}
         </div>
       )}

@@ -1,14 +1,16 @@
 :root {
   --bg: #f7f1e6; --ink: #3a2a1d; --line: #d9ccb6; --field: #fffaf1; --card: #efe4d1;
   --accent: #5d7a4a; --onaccent: #fff; --error: #a3402a;
-  --bean: #5a3522;
+  --bean: #5a3522; --mine: #c0703a;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--ink); }
 body { font: 15px/1.5 var(--sans), system-ui, sans-serif; }
 a { color: inherit; text-decoration: none; }
 
-.screen { max-width: 440px; min-height: 100dvh; margin: 0 auto; padding: 18px 18px 28px; display: flex; flex-direction: column; gap: 12px; }
+/* Comfortable side margins on phones, plus room for notches and the home indicator. */
+.screen { max-width: 460px; min-height: 100dvh; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;
+  padding: max(22px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(36px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left)); }
 .brand { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
 .mark { font-weight: 600; letter-spacing: .2em; font-size: 13px; }
 .sub { font-size: 12px; opacity: .75; }
@@ -59,11 +61,24 @@ a { color: inherit; text-decoration: none; }
 .milestones li.done { opacity: 1; }
 .milestones li.done::before { background: var(--bean); }
 .milestones li.now { opacity: .9; font-weight: 600; }
-.scene { position: relative; height: min(64dvh, 560px); min-height: 360px; margin: 0 -18px; overflow: hidden; touch-action: pan-y;
+.scene { position: relative; height: min(60svh, 560px); min-height: 340px; border-radius: 18px; overflow: hidden;
   background: radial-gradient(120% 80% at 50% 30%, #fbf6ec 0%, #f2e7d4 70%); }
-.scene.mini { height: 240px; min-height: 0; margin: 0; border-radius: 14px; }
-.scene.mini canvas { pointer-events: none; }
+.scene.mini { height: 280px; min-height: 0; }
+.scene-canvas { position: absolute; inset: 0; touch-action: none; }
+.scene.mini .scene-canvas { pointer-events: none; }
 .scene canvas { display: block; width: 100%; height: 100%; }
+.scene-tools { position: absolute; right: 10px; bottom: 10px; display: flex; gap: 6px; }
+.scene-tools button { padding: 8px 13px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255, 250, 241, .92); color: var(--ink); font: 600 12px var(--sans), sans-serif; cursor: pointer; }
+
+/* "Your leaf" marker, positioned every frame by the 3D scene. */
+.leaf-marker { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity .3s; }
+.leaf-marker .ring { position: absolute; left: -15px; top: -15px; width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--mine); box-sizing: border-box; animation: ping 1.8s ease-out infinite; }
+.leaf-marker .tag { position: absolute; left: 0; bottom: 26px; transform: translateX(-50%); padding: 5px 10px; border-radius: 999px; background: var(--mine); color: #fff; font: 600 11px var(--sans), sans-serif; white-space: nowrap; box-shadow: 0 2px 8px rgba(58, 42, 29, .2); }
+.leaf-marker .tag::after { content: ""; position: absolute; left: 50%; top: 100%; margin-left: -5px; border: 5px solid transparent; border-top-color: var(--mine); }
+.leaf-marker.below .tag { bottom: auto; top: 26px; }
+.leaf-marker.below .tag::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: var(--mine); }
+@keyframes ping { 0% { transform: scale(.7); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .leaf-marker .ring { animation: none; } }
 
 .admin-nav { display: flex; gap: 16px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 14px; }
 .admin-nav a { opacity: .7; }
